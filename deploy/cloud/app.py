@@ -35,7 +35,7 @@ def load_model():
     from llama_cpp import Llama
 
     path = hf_hub_download(repo_id=FT_REPO, filename=FT_FILE)
-    return Llama(model_path=path, n_ctx=1024, n_threads=os.cpu_count() or 2, verbose=False)
+    return Llama(model_path=path, n_ctx=1024, n_threads=2, n_threads_batch=2, verbose=False)
 
 
 def truncate(text: str) -> str:
