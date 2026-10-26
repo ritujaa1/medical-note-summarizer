@@ -121,11 +121,11 @@ MLX only runs on Apple Silicon. To let anyone use the model:
    ubiquitous llama.cpp runtime uses on any CPU/GPU.
 3. **Quantize**: `llama-quantize` → Q4_K_M, 3.8 GB.
 4. **Publish**: uploaded to Hugging Face with a model card:
-   → `imkalpx/llama2-med-summarizer-gguf`
+   → `ritujaa1/llama2-med-summarizer-gguf`
 
 ### Step 7 — Deployment (the saga)
 
-Goal: a free, permanent, public demo URL. Three attempts:
+Goal: a free, permanent, public demo URL. Four attempts:
 
 1. **HF Spaces (Streamlit SDK)** — rejected: HF removed the Streamlit SDK
    (only gradio/docker/static now).
@@ -133,10 +133,15 @@ Goal: a free, permanent, public demo URL. Three attempts:
    behind PRO ($9/mo).
 3. **Streamlit Community Cloud** (deploys free from a GitHub repo) — the
    winner, but with a catch: it offers ~1 GB RAM and the 7B model needs ~4.5 GB.
+4. **HF Spaces (ZeroGPU)** — the free route for the full 7B: free personal
+   accounts older than 30 days can host 2 Gradio Spaces on ZeroGPU.
+   `deploy/zerogpu/` loads the same Q4_K_M GGUF through transformers
+   (dequantized to fp16) on a shared GPU, so summaries take seconds instead
+   of minutes. Deploy with `python deploy/upload_zerogpu.py`.
 
 **Solution: a sibling model.** Fine-tuned **Qwen2.5-0.5B** on the exact same
 data with the exact same pipeline (~15 min). Its Q4_K_M GGUF is **379 MB** —
-fits the free tier. Published as `imkalpx/qwen05-med-summarizer-gguf`.
+fits the free tier. Published as `ritujaa1/qwen05-med-summarizer-gguf`.
 Scores: structure 0.88, number fidelity 1.00, ROUGE-1 0.845 — clearly labeled
 in the demo as the small model, with a link to the 7B.
 
@@ -329,8 +334,8 @@ one of the most common silent killers in LLM fine-tuning.
 | What | Where |
 |---|---|
 | Code | github.com/Kalpx07/medical-note-summarizer |
-| 7B model (GGUF) | huggingface.co/imkalpx/llama2-med-summarizer-gguf |
-| 0.5B demo model (GGUF) | huggingface.co/imkalpx/qwen05-med-summarizer-gguf |
+| 7B model (GGUF) | huggingface.co/ritujaa1/llama2-med-summarizer-gguf |
+| 0.5B demo model (GGUF) | huggingface.co/ritujaa1/qwen05-med-summarizer-gguf |
 | Live demo | your Streamlit Cloud URL |
 | Eval report | results/eval_report.json |
 

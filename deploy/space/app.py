@@ -14,7 +14,7 @@ from huggingface_hub import hf_hub_download
 
 st.set_page_config(page_title="Medical Note Summarizer", page_icon="🩺", layout="wide")
 
-FT_REPO = os.getenv("MODEL_REPO", "imkalpx/llama2-med-summarizer-gguf")
+FT_REPO = os.getenv("MODEL_REPO", "ritujaa1/llama2-med-summarizer-gguf")
 FT_FILE = os.getenv("MODEL_FILE", "med-summarizer-Q4_K_M.gguf")
 BASE_REPO = "TheBloke/Llama-2-7B-GGUF"
 BASE_FILE = "llama-2-7b.Q4_K_M.gguf"

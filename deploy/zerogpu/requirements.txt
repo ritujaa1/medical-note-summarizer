@@ -1,0 +1,4 @@
+transformers>=4.46.0
+gguf>=0.10.0
+accelerate>=0.34.0
+sentencepiece>=0.2.0

@@ -3,7 +3,7 @@ Medical Note Summarizer — Streamlit Community Cloud edition (free tier).
 
 Runs a Qwen2.5-0.5B sibling model fine-tuned on the same dataset as the
 headline Llama 2 7B (which is too large for free hosting — see
-https://huggingface.co/imkalpx/llama2-med-summarizer-gguf). The 0.5B GGUF
+https://huggingface.co/ritujaa1/llama2-med-summarizer-gguf). The 0.5B GGUF
 is ~400 MB and fits the free tier's ~1 GB RAM.
 """
 
@@ -15,7 +15,7 @@ from huggingface_hub import hf_hub_download
 
 st.set_page_config(page_title="Medical Note Summarizer", page_icon="🩺", layout="wide")
 
-FT_REPO = os.getenv("MODEL_REPO", "imkalpx/qwen05-med-summarizer-gguf")
+FT_REPO = os.getenv("MODEL_REPO", "ritujaa1/qwen05-med-summarizer-gguf")
 FT_FILE = os.getenv("MODEL_FILE", "qwen05-med-summarizer-Q4_K_M.gguf")
 
 REQUIRED_SECTIONS = ["DIAGNOSIS", "KEY FINDINGS", "MEDICATIONS", "ACTION ITEMS", "FOLLOW-UP"]
@@ -191,7 +191,7 @@ st.markdown("""
   ⚠️ <strong>Educational demo only.</strong> Trained on fully synthetic data — do not use
   with real patient information or for clinical decisions. This free demo runs a 0.5B
   sibling model; the headline
-  <a href="https://huggingface.co/imkalpx/llama2-med-summarizer-gguf">Llama 2 7B fine-tune</a>
+  <a href="https://huggingface.co/ritujaa1/llama2-med-summarizer-gguf">Llama 2 7B fine-tune</a>
   is too large for free hosting.
   <em>Structure compliance</em> = fraction of the 5 required sections present.
   <em>Number fidelity</em> = fraction of numbers in the summary that appear in the source note.

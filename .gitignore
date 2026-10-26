@@ -7,7 +7,7 @@ __pycache__/
 *.pyc
 .DS_Store
 
-# model weights (GBs — published at hf.co/imkalpx/llama2-med-summarizer-gguf)
+# model weights (GBs — published at hf.co/ritujaa1/llama2-med-summarizer-gguf)
 models/
 
 # scratch
