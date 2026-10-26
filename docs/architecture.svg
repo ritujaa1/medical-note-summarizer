@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 960" width="1200" height="960" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
+    </marker>
+    <style>
+      .t  { font-size: 15px; font-weight: 700; fill: #0f172a; }
+      .s  { font-size: 12.5px; fill: #475569; }
+      .h  { font-size: 13px; font-weight: 800; letter-spacing: .12em; fill: #0369a1; }
+      .box   { fill: #ffffff; stroke: #334155; stroke-width: 1.3; }
+      .train { fill: #e0f2fe; stroke: #0284c7; stroke-width: 1.6; }
+      .art   { fill: #f1f5f9; stroke: #475569; stroke-width: 1.5; }
+      .live  { fill: #ecfdf5; stroke: #059669; stroke-width: 1.6; }
+      .soon  { fill: #ffffff; stroke: #059669; stroke-width: 1.6; stroke-dasharray: 6 4; }
+      .band  { fill: #f8fbfe; stroke: #cfe3f1; stroke-width: 1; }
+      .ln    { stroke: #334155; stroke-width: 1.6; fill: none; }
+      .good  { fill: #047857; font-weight: 700; }
+      .warn  { fill: #b45309; font-weight: 700; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="960" fill="#ffffff"/>
+  <text x="40" y="44" style="font-size:24px;font-weight:800;fill:#0f172a">🩺 Medical Note Summarizer — architecture</text>
+  <text x="40" y="68" class="s">LoRA fine-tune of Llama 2 7B that turns free-text clinical notes into 5-section structured summaries — trained, evaluated and packaged for $0</text>
+
+  <!-- ============ 1. DATA ============ -->
+  <rect x="20" y="88" width="1160" height="132" rx="10" class="band"/>
+  <text x="40" y="114" class="h">1 · DATA</text>
+  <rect x="40" y="128" width="340" height="76" rx="8" class="box"/>
+  <text x="210" y="156" text-anchor="middle" class="t">Synthetic data generator</text>
+  <text x="210" y="176" text-anchor="middle" class="s">600 SOAP-style clinical notes + gold</text>
+  <text x="210" y="193" text-anchor="middle" class="s">5-section summaries · no real patient data</text>
+  <path d="M380,166 L438,166" class="ln" marker-end="url(#arr)"/>
+  <rect x="442" y="128" width="320" height="76" rx="8" class="box"/>
+  <text x="602" y="156" text-anchor="middle" class="t">Validate</text>
+  <text x="602" y="176" text-anchor="middle" class="s">keys, non-empty, lengths</text>
+  <text x="602" y="193" text-anchor="middle" class="s">~250 tokens per example</text>
+  <path d="M762,166 L820,166" class="ln" marker-end="url(#arr)"/>
+  <rect x="824" y="128" width="336" height="76" rx="8" class="art"/>
+  <text x="992" y="156" text-anchor="middle" class="t">Train / val / test split</text>
+  <text x="992" y="178" text-anchor="middle" class="s"><tspan font-weight="700" fill="#0f172a">510</tspan> train · <tspan font-weight="700" fill="#0f172a">45</tspan> validation · <tspan font-weight="700" fill="#0f172a">45</tspan> test</text>
+  <text x="992" y="195" text-anchor="middle" class="s">prompt / completion JSONL</text>
+
+  <!-- ============ 2. FINE-TUNE ============ -->
+  <rect x="20" y="236" width="1160" height="186" rx="10" class="band"/>
+  <text x="40" y="262" class="h">2 · FINE-TUNE — LOCAL, APPLE SILICON (MLX)</text>
+  <rect x="40" y="280" width="230" height="84" rx="8" class="art"/>
+  <text x="155" y="310" text-anchor="middle" class="t">Llama 2 7B base</text>
+  <text x="155" y="330" text-anchor="middle" class="s">NousResearch mirror</text>
+  <text x="155" y="347" text-anchor="middle" class="s">fp16 · ~13 GB</text>
+  <path d="M270,322 L314,322" class="ln" marker-end="url(#arr)"/>
+  <rect x="318" y="280" width="220" height="84" rx="8" class="train"/>
+  <text x="428" y="310" text-anchor="middle" class="t">Quantize to 4-bit</text>
+  <text x="428" y="330" text-anchor="middle" class="s">mlx_lm convert -q</text>
+  <text x="428" y="347" text-anchor="middle" class="s">→ 3.5 GB, frozen base</text>
+  <path d="M538,322 L582,322" class="ln" marker-end="url(#arr)"/>
+  <rect x="586" y="272" width="330" height="134" rx="8" class="train"/>
+  <text x="751" y="300" text-anchor="middle" class="t">QLoRA-style LoRA training</text>
+  <text x="751" y="322" text-anchor="middle" class="s">adapters on 16 layers · ~10M params (0.15%)</text>
+  <text x="751" y="340" text-anchor="middle" class="s">loss on summary tokens only (prompt-masked)</text>
+  <text x="751" y="358" text-anchor="middle" class="s">lr 1e-4 · batch 2 · grad checkpointing</text>
+  <text x="751" y="376" text-anchor="middle" class="s">val loss 0.582 → 0.031 · stopped at ~300 iters</text>
+  <text x="751" y="394" text-anchor="middle" class="s">~45 min · ~5.3 GB RAM · MacBook</text>
+  <path d="M916,322 L960,322" class="ln" marker-end="url(#arr)"/>
+  <rect x="964" y="280" width="196" height="84" rx="8" class="art"/>
+  <text x="1062" y="310" text-anchor="middle" class="t">LoRA adapter</text>
+  <text x="1062" y="330" text-anchor="middle" class="s">38 MB</text>
+  <text x="1062" y="347" text-anchor="middle" class="s">plugs into the base</text>
+  <path d="M992,204 L992,226 L751,226 L751,268" class="ln" marker-end="url(#arr)"/>
+  <text x="760" y="252" class="s" style="font-size:11px">510 train + 45 val</text>
+
+  <!-- ============ 3. EVALUATE ============ -->
+  <rect x="20" y="438" width="1160" height="196" rx="10" class="band"/>
+  <text x="40" y="464" class="h">3 · EVALUATE — BASE vs FINE-TUNED, 25 HELD-OUT TEST NOTES</text>
+  <rect x="40" y="480" width="250" height="134" rx="8" class="box"/>
+  <text x="165" y="510" text-anchor="middle" class="t">Run both models</text>
+  <text x="165" y="532" text-anchor="middle" class="s">same prompt, same notes</text>
+  <text x="165" y="550" text-anchor="middle" class="s">temp 0.2 · top-p 0.9</text>
+  <text x="165" y="568" text-anchor="middle" class="s">repetition penalty 1.15</text>
+  <text x="165" y="586" text-anchor="middle" class="s">output clean-up</text>
+  <path d="M290,547 L334,547" class="ln" marker-end="url(#arr)"/>
+  <rect x="338" y="480" width="300" height="134" rx="8" class="box"/>
+  <text x="488" y="510" text-anchor="middle" class="t">Score vs gold summaries</text>
+  <text x="488" y="532" text-anchor="middle" class="s">ROUGE-1 / 2 / L · BLEU</text>
+  <text x="488" y="550" text-anchor="middle" class="s">structure compliance</text>
+  <text x="488" y="568" text-anchor="middle" class="s">(5 required sections present)</text>
+  <text x="488" y="586" text-anchor="middle" class="s">number fidelity — hallucination</text>
+  <text x="488" y="603" text-anchor="middle" class="s">check vs numbers in the note</text>
+  <path d="M638,547 L682,547" class="ln" marker-end="url(#arr)"/>
+  <rect x="686" y="480" width="474" height="134" rx="8" class="art"/>
+  <text x="720" y="506" class="t" style="font-size:13px">Metric</text>
+  <text x="940" y="506" text-anchor="middle" class="t" style="font-size:13px">Base</text>
+  <text x="1080" y="506" text-anchor="middle" class="t" style="font-size:13px">Fine-tuned</text>
+  <line x1="704" y1="514" x2="1142" y2="514" stroke="#cbd5e1"/>
+  <text x="720" y="534" class="s">ROUGE-L</text><text x="940" y="534" text-anchor="middle" class="s">0.679</text><text x="1080" y="534" text-anchor="middle" class="s good">0.944</text>
+  <text x="720" y="554" class="s">BLEU</text><text x="940" y="554" text-anchor="middle" class="s">0.351</text><text x="1080" y="554" text-anchor="middle" class="s good">0.920</text>
+  <text x="720" y="574" class="s">Structure compliance</text><text x="940" y="574" text-anchor="middle" class="s">97.6%</text><text x="1080" y="574" text-anchor="middle" class="s good">100%</text>
+  <text x="720" y="594" class="s">Number fidelity</text><text x="940" y="594" text-anchor="middle" class="s">99.6%</text><text x="1080" y="594" text-anchor="middle" class="s warn">97.0%</text>
+  <path d="M1062,364 L1062,420 L1170,420 L1170,547 L1164,547" class="ln" style="stroke-dasharray:4 4" marker-end="url(#arr)"/>
+
+  <!-- ============ 4. PACKAGE & SERVE ============ -->
+  <rect x="20" y="650" width="1160" height="252" rx="10" class="band"/>
+  <text x="40" y="676" class="h">4 · PACKAGE &amp; SERVE</text>
+  <rect x="40" y="692" width="250" height="74" rx="8" class="box"/>
+  <text x="165" y="720" text-anchor="middle" class="t">Fuse</text>
+  <text x="165" y="742" text-anchor="middle" class="s">adapter merged into base → fp16</text>
+  <path d="M290,729 L334,729" class="ln" marker-end="url(#arr)"/>
+  <rect x="338" y="692" width="250" height="74" rx="8" class="box"/>
+  <text x="463" y="720" text-anchor="middle" class="t">Convert + quantize</text>
+  <text x="463" y="742" text-anchor="middle" class="s">llama.cpp → GGUF Q4_K_M</text>
+  <path d="M588,729 L632,729" class="ln" marker-end="url(#arr)"/>
+  <rect x="636" y="692" width="524" height="74" rx="8" class="art"/>
+  <text x="898" y="720" text-anchor="middle" class="t">Hugging Face Hub</text>
+  <text x="898" y="742" text-anchor="middle" class="s">llama2-med-summarizer-gguf (3.8 GB) · qwen05-med-summarizer-gguf (379 MB)</text>
+
+  <path d="M898,766 L898,780 L165,780 L165,792" class="ln" marker-end="url(#arr)"/>
+  <path d="M898,766 L898,792" class="ln" marker-end="url(#arr)"/>
+  <path d="M898,780 L1040,780 L1040,792" class="ln" marker-end="url(#arr)"/>
+
+  <rect x="40" y="796" width="340" height="90" rx="8" class="box"/>
+  <text x="210" y="822" text-anchor="middle" class="t">Local app · MLX</text>
+  <text x="210" y="842" text-anchor="middle" class="s">Streamlit · base vs fine-tuned side by side</text>
+  <text x="210" y="860" text-anchor="middle" class="s">with live metric pills · fully on-device</text>
+  <rect x="728" y="796" width="250" height="90" rx="8" class="live"/>
+  <text x="853" y="822" text-anchor="middle" class="t">Live demo · free</text>
+  <text x="853" y="842" text-anchor="middle" class="s">Streamlit Cloud · llama.cpp CPU</text>
+  <text x="853" y="860" text-anchor="middle" class="s">Qwen2.5-0.5B sibling, same</text>
+  <text x="853" y="876" text-anchor="middle" class="s">data + pipeline</text>
+  <rect x="988" y="796" width="172" height="90" rx="8" class="soon"/>
+  <text x="1074" y="822" text-anchor="middle" class="t">Full 7B · free</text>
+  <text x="1074" y="842" text-anchor="middle" class="s">HF Space · ZeroGPU</text>
+  <text x="1074" y="860" text-anchor="middle" class="s">Gradio + transformers</text>
+  <text x="1074" y="876" text-anchor="middle" class="s">seconds per summary</text>
+
+  <!-- legend -->
+  <rect x="40" y="920" width="18" height="14" rx="3" class="train"/>
+  <text x="64" y="932" class="s">training step (MLX)</text>
+  <rect x="220" y="920" width="18" height="14" rx="3" class="art"/>
+  <text x="244" y="932" class="s">artifact / data</text>
+  <rect x="380" y="920" width="18" height="14" rx="3" class="live"/>
+  <text x="404" y="932" class="s">public demo</text>
+  <text x="1160" y="932" text-anchor="end" class="s">Educational project · synthetic data only · not for clinical use</text>
+</svg>

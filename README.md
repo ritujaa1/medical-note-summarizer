@@ -1,8 +1,12 @@
 # 🩺 Medical Note Summarizer — Fine-tuned Llama 2 7B
 
-Fine-tunes **Llama 2 7B** (via **Replicate** managed LoRA training) to convert free-text clinical notes into structured summaries with fixed sections: **DIAGNOSIS, KEY FINDINGS, MEDICATIONS, ACTION ITEMS, FOLLOW-UP**. Includes synthetic dataset generation, a full evaluation framework (ROUGE, BLEU, structure compliance, hallucination checks), a Streamlit comparison app, and Hugging Face publishing.
+Fine-tunes **Llama 2 7B** with **LoRA, locally on Apple Silicon (MLX)**, to convert free-text clinical notes into structured summaries with fixed sections: **DIAGNOSIS, KEY FINDINGS, MEDICATIONS, ACTION ITEMS, FOLLOW-UP**. Includes synthetic dataset generation, a full evaluation framework (ROUGE, BLEU, structure compliance, hallucination checks), a Streamlit comparison app, and Hugging Face publishing.
 
 > ⚠️ Educational/portfolio project. Trained on fully synthetic data. Not for real patient data or clinical decisions.
+
+**Live demo:** [medical-note-summarizer-ritujaa1.streamlit.app](https://medical-note-summarizer-ritujaa1.streamlit.app) (Qwen2.5-0.5B sibling model, same data and pipeline) · **Model:** [ritujaa1/llama2-med-summarizer-gguf](https://huggingface.co/ritujaa1/llama2-med-summarizer-gguf)
+
+![Architecture](docs/architecture.png)
 
 ## Architecture
 

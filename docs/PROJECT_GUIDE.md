@@ -147,7 +147,7 @@ in the demo as the small model, with a link to the 7B.
 
 Final architecture:
 ```
-GitHub repo (Kalpx07/medical-note-summarizer)
+GitHub repo (ritujaa1/medical-note-summarizer)
    └─ auto-deploys → Streamlit Community Cloud (free)
         └─ downloads 0.5B GGUF from Hugging Face at startup
              └─ llama-cpp-python CPU inference
@@ -333,7 +333,7 @@ one of the most common silent killers in LLM fine-tuning.
 
 | What | Where |
 |---|---|
-| Code | github.com/Kalpx07/medical-note-summarizer |
+| Code | github.com/ritujaa1/medical-note-summarizer |
 | 7B model (GGUF) | huggingface.co/ritujaa1/llama2-med-summarizer-gguf |
 | 0.5B demo model (GGUF) | huggingface.co/ritujaa1/qwen05-med-summarizer-gguf |
 | Live demo | your Streamlit Cloud URL |
